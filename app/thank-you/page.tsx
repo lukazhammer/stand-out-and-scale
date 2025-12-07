@@ -2,16 +2,16 @@
 
 import { useSearchParams } from 'next/navigation';
 import Link from 'next/link';
-import { useState } from 'react';
+import { Suspense, useState } from 'react';
 
-export default function ThankYouPage() {
+function ThankYouContent() {
   const searchParams = useSearchParams();
   const sessionId = searchParams?.get('session_id');
   const [email, setEmail] = useState('');
   const [resending, setResending] = useState(false);
   const [resendMessage, setResendMessage] = useState('');
 
-  const handleResend = async () => {
+    const handleResend = async () => {
     if (!email) {
       setResendMessage('Please enter your email address');
       return;
@@ -30,10 +30,14 @@ export default function ThankYouPage() {
       if (response.ok) {
         setResendMessage('Email sent! Check your inbox.');
       } else {
-        setResendMessage('Failed to send email. Please try again or contact support.');
+        setResendMessage(
+          'Failed to send email. Please try again or contact support.'
+        );
       }
     } catch (error) {
-      setResendMessage('An error occurred. Please contact support@brandora.app');
+      setResendMessage(
+        'An error occurred. Please contact support@brandora.app'
+      );
     } finally {
       setResending(false);
     }
@@ -103,5 +107,13 @@ export default function ThankYouPage() {
         </div>
       </div>
     </div>
+  );
+}
+
+export default function ThankYouPage() {
+  return (
+    <Suspense fallback={<div className="p-8 text-center">Loading...</div>}>
+      <ThankYouContent />
+    </Suspense>
   );
 }
