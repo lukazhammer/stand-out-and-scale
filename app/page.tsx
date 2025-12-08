@@ -6,7 +6,7 @@ export default function SalesPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  console.log('Sales Page Loaded - Version 2.0 (Fix Applied)');
+  console.log('NUCLEAR FIX DEPLOYED: ' + new Date().toISOString());
 
   const handleCheckout = async () => {
     setLoading(true);
@@ -29,7 +29,8 @@ export default function SalesPage() {
         throw new Error('No checkout URL returned from server');
       }
 
-      window.location.href = url;
+      // Nuclear redirect
+      window.location.assign(url);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error occurred');
       console.error('Checkout error:', err);
