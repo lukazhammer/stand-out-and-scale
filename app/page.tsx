@@ -6,6 +6,8 @@ export default function SalesPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
+  console.log('Sales Page Loaded - Version 2.0 (Fix Applied)');
+
   const handleCheckout = async () => {
     setLoading(true);
     setError('');
@@ -63,7 +65,7 @@ export default function SalesPage() {
             disabled={loading}
             className="bg-teal-600 hover:bg-teal-700 disabled:bg-gray-400 text-white font-bold py-4 px-12 rounded-lg text-lg transition-colors mb-4"
           >
-            {loading ? 'Processing...' : 'Get Instant Access — $25'}
+            {loading ? 'Processing...' : 'Get Instant Access Now — $25'}
           </button>
 
           <p className="text-sm text-slate-500">
