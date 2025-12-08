@@ -26,16 +26,8 @@ export default function SalesPage() {
       if (!url) {
         throw new Error('No checkout URL returned from server');
       }
-      
-      window.location.href
 
-      const { error: stripeError } = await (stripe as any).redirectToCheckout({
-        sessionId,
-      });
-
-      if (stripeError) {
-        setError(stripeError.message || 'Something went wrong');
-      }
+      window.location.href = url;
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error occurred');
       console.error('Checkout error:', err);
