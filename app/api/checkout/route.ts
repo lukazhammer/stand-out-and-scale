@@ -33,7 +33,7 @@ export async function POST(request: NextRequest) {
       automatic_tax: { enabled: false },
     });
 
-    return NextResponse.json({ sessionId: session.id });
+    return NextResponse.json({ url: session.url });
   } catch (error) {
     console.error('Checkout error:', error);
     return NextResponse.json(

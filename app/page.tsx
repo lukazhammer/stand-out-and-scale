@@ -1,11 +1,6 @@
 'use client';
 
 import { useState } from 'react';
-import { loadStripe } from '@stripe/stripe-js';
-
-const stripePromise = loadStripe(
-  process.env.NEXT_PUBLIC_STRIPE_PUBLISHABLE_KEY || ''
-);
 
 export default function SalesPage() {
   const [loading, setLoading] = useState(false);
@@ -26,12 +21,13 @@ export default function SalesPage() {
         throw new Error('Failed to create checkout session');
       }
 
-      const { sessionId } = await response.json();
-      const stripe = await stripePromise;
+      const { url } = await response.json();
 
-      if (!stripe) {
-        throw new Error('Stripe failed to load');
+      if (!url) {
+        throw new Error('No checkout URL returned from server');
       }
+      
+      window.location.href
 
       const { error: stripeError } = await (stripe as any).redirectToCheckout({
         sessionId,
