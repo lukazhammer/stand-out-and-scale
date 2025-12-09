@@ -6,9 +6,9 @@ export default function SalesPage() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
 
-  console.log('NUCLEAR FIX DEPLOYED: ' + new Date().toISOString());
+  console.log('NUCLEAR FIX v3 DEPLOYED: ' + new Date().toISOString());
 
-  const handleCheckout = async () => {
+  const processPayment = async () => {
     setLoading(true);
     setError('');
 
@@ -29,7 +29,7 @@ export default function SalesPage() {
         throw new Error('No checkout URL returned from server');
       }
 
-      // Nuclear redirect
+      console.log('Redirecting to:', url);
       window.location.assign(url);
     } catch (err) {
       setError(err instanceof Error ? err.message : 'Unknown error occurred');
@@ -62,11 +62,24 @@ export default function SalesPage() {
           </p>
 
           <button
-            onClick={handleCheckout}
+            onClick={processPayment}
             disabled={loading}
             className="bg-teal-600 hover:bg-teal-700 disabled:bg-gray-400 text-white font-bold py-4 px-12 rounded-lg text-lg transition-colors mb-4"
           >
-            {loading ? 'Processing...' : 'Get Instant Access Now — $25'}
+            {loading ? 'Processing...' : 'Get Instant Access (v3) — $25'}
+          </button>
+
+          <p className="text-sm text-slate-500">
+            ✓ Instant digital delivery | ✓ 30-day money back guarantee | ✓ No
+            spam
+          </p>
+// ...
+          <button
+            onClick={processPayment}
+            disabled={loading}
+            className="bg-white hover:bg-slate-100 disabled:bg-gray-300 text-teal-600 font-bold py-4 px-12 rounded-lg text-lg transition-colors"
+          >
+            {loading ? 'Processing...' : 'Get Instant Access (v3) — $25'}
           </button>
 
           <p className="text-sm text-slate-500">
@@ -282,11 +295,11 @@ export default function SalesPage() {
           </p>
 
           <button
-            onClick={handleCheckout}
+            onClick={processPayment}
             disabled={loading}
             className="bg-white hover:bg-slate-100 disabled:bg-gray-300 text-teal-600 font-bold py-4 px-12 rounded-lg text-lg transition-colors"
           >
-            {loading ? 'Processing...' : 'Get Instant Access for $25'}
+            {loading ? 'Processing...' : 'Get Instant Access (v3) for $25'}
           </button>
 
           <p className="text-teal-100 text-sm mt-4">
@@ -294,16 +307,16 @@ export default function SalesPage() {
             spam
           </p>
         </div>
-      </section>
+      </section >
 
       {/* Footer */}
-      <footer className="bg-slate-900 text-slate-400 py-8 px-6">
+      < footer className="bg-slate-900 text-slate-400 py-8 px-6" >
         <div className="max-w-4xl mx-auto text-center text-sm">
           <p>
             © 2025 Brandora. All rights reserved.
           </p>
         </div>
-      </footer>
-    </div>
+      </footer >
+    </div >
   );
 }
