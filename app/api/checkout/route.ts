@@ -1,16 +1,16 @@
-import Stripe from 'stripe';
 import { NextRequest, NextResponse } from 'next/server';
+import { stripe } from '@/lib/stripe';
+import Stripe from 'stripe';
 
-const stripe = new Stripe(process.env.STRIPE_SECRET_KEY || '', {
-  // Keep this in sync with the Stripe API version expected by the SDK types.
-});
-
-export async function POST(request: NextRequest) {
+export async function POST(req: NextRequest) {
   try {
-    const { quantity = 1 } = await request.json();
+    const { priceId } = await req.json();
+
+    // Create checkout session
+    const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || 'http://localhost:3000';
 
     const session = await stripe.checkout.sessions.create({
-      payment_method_types: ['card'],
+      mode: 'payment',
       line_items: [
         {
           price_data: {
@@ -18,26 +18,45 @@ export async function POST(request: NextRequest) {
             product_data: {
               name: 'Stand Out and Scale',
               description: 'Strategic Brand Building for Serious Entrepreneurs',
-              images: [
-                `${process.env.NEXT_PUBLIC_APP_URL}/book-cover.jpg`,
-              ],
+              images: [`${baseUrl}/standoutcover3d.JPG`],
             },
-            unit_amount: 2500, // $25.00 in cents
+            unit_amount: 799, // $7.99
           },
-          quantity,
+          quantity: 1,
         },
       ],
-      mode: 'payment',
-      success_url: `${process.env.NEXT_PUBLIC_APP_URL}/thank-you?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${process.env.NEXT_PUBLIC_APP_URL}/?canceled=true`,
-      automatic_tax: { enabled: false },
+      // Redirect URLs after checkout
+      success_url: `${baseUrl}/success?session_id={CHECKOUT_SESSION_ID}`,
+      cancel_url: `${baseUrl}`,
+
+      // Optional: Collect billing address for tax purposes
+      billing_address_collection: 'auto',
+
+      // Optional: Allow promotion codes
+      allow_promotion_codes: true,
+
+      // Optional: Pre-fill customer email if you have it
+      // customer_email: 'customer@example.com',
+
+      // Metadata for your records
+      metadata: {
+        product: 'stand-out-and-scale-ebook',
+      },
     });
 
     return NextResponse.json({ url: session.url });
   } catch (error) {
-    console.error('Checkout error:', error);
+    console.error('Stripe checkout error:', error);
+
+    if (error instanceof Stripe.errors.StripeError) {
+      return NextResponse.json(
+        { error: error.message },
+        { status: error.statusCode || 500 }
+      );
+    }
+
     return NextResponse.json(
-      { error: 'Failed to create checkout session' },
+      { error: 'An unexpected error occurred' },
       { status: 500 }
     );
   }
